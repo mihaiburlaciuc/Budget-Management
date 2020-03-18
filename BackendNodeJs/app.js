@@ -6,7 +6,20 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const mongoose = require("mongoose");
+// Protocol: mongodb://localhost:27017/test
+const DB_URI = "mongodb://mongo:27017/budget";
+mongoose.connect(DB_URI).then(() => {
+    console.log("_________________________ NODEJS => APP.JS ________________________");
+    console.log("Connected to mongo db");
+})
+.catch(err => {
+    console.log("_________________________ NODEJS => APP.JS ________________________");
+    console.log("Mongo err " + err);
+});
+
 app.get('/', (req, res) => {
+    console.log('HW req --- ');
     res.send('Hello World');
 });
 

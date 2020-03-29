@@ -1,3 +1,11 @@
+# Docker commands
+
+## ```docker build -t mihaiburlaciuc/budget-app-client-frontend ```
+## ```docker run -p 3000:3000 -it mihaiburlaciuc/budget-app-client-frontend```
+
+## !!! ```stdin_open: true``` must be added to docker-compose in order for the react app not to crash
+Source: https://stackoverflow.com/questions/60790440/docker-container-exiting-immediately-after-starting-when-using-npm-init-react-ap
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

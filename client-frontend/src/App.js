@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 
-import { LandingPage } from "./components/landing.page";
+import Login from "./components/login.component";
 import { MainPage } from "./components/main.page";
 import Register from "./components/register.component";
 
@@ -14,7 +14,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Switch>
-          <Route exact path="/" component={LandingPage} />
+          <Route exact path="/" component={Login} />
           <Route exact path="/main" component={MainPage} />
           <Route exact path="/register" component={Register} />
           {/* <ProtectedRoute exact path="/app" component={AppLayout} /> */}

@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 
-
-export default class Register extends Component {
+export default class Login extends Component {
   constructor(props) {
     super(props);
 
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
-    // this.onSubmit = this.onSubmit.bind(this);
+    this.onLogin = this.onLogin.bind(this);
 
     this.state = {
       username: '',
@@ -15,30 +14,29 @@ export default class Register extends Component {
     }
   }
 
-    onDone() {
-        console.log("username: " + this.state.username);
-        console.log("password: " + this.state.password);
+  onLogin() {
+    console.log("username: " + this.state.username);
+    console.log("password: " + this.state.password);
 
-        this.props.history.push("/");
-    }
+    this.props.history.push("/main");
+  }
 
-    onChangeUsername(e) {
-      this.setState({
-        username: e.target.value
-      })
-    }
-  
-    onChangePassword(e) {
-      this.setState({
-        password: e.target.value
-      })
-    }
+  onChangeUsername(e) {
+    this.setState({
+      username: e.target.value
+    })
+  }
 
-    render() {
-        return (
+  onChangePassword(e) {
+    this.setState({
+      password: e.target.value
+    })
+  }
+
+  render() {
+      return (
           <div>
-            <h1>Register</h1>
-            
+            <h1>Budget Management App</h1>
             <div className="form-group"> 
               <label>Username: </label>
               <input  type="text"
@@ -57,17 +55,23 @@ export default class Register extends Component {
                   onChange={ this.onChangePassword }
                   />
             </div>
-        
             <button className="btn btn-primary"
               onClick={() => {
-                console.log("Done was pressed");
-                this.onDone()
-                
+                this.onLogin()
               }}
             >
-            Done
+            Login
+            </button>
+            <p/>
+            <button className="btn btn-primary"
+              onClick={() => {
+                this.props.history.push("/register");
+              }}
+            >
+            Register
             </button>
           </div>
-        );
-    }
+      );
+  }
+    
 };

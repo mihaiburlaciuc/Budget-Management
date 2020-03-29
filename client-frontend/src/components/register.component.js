@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-
+import axios from 'axios';
 
 export default class Register extends Component {
+  
   constructor(props) {
     super(props);
 
+    this.serverURL = 'http://localhost:8080/users';
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
-    // this.onSubmit = this.onSubmit.bind(this);
+    this.onDone = this.onDone.bind(this);
 
     this.state = {
       username: '',
@@ -19,7 +21,17 @@ export default class Register extends Component {
         console.log("username: " + this.state.username);
         console.log("password: " + this.state.password);
 
-        this.props.history.push("/");
+        axios.post(this.serverURL + '/register')
+        .then(response => {
+          console.log(response);
+          this.props.history.push("/");
+        })
+        .catch(err => {
+          console.log(err);
+          this.props.history.push("/");
+        });
+
+        
     }
 
     onChangeUsername(e) {

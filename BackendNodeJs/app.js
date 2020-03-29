@@ -6,9 +6,28 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Add headers for CORS
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    // The browser sends an OPTIONS request at some point - find out when
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).json({});
+    }
+    next();
+});
+
 const mongoose = require("mongoose");
 // Protocol: mongodb://localhost:27017/test
 const DB_URI = "mongodb://mongo:27017/budget";
+
+
+
+
 mongoose.connect(DB_URI).then(() => {
     console.log("_________________________ NODEJS => APP.JS ________________________");
     console.log("Connected to mongo db");

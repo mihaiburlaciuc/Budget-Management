@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import axios from 'axios';
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
 
+    this.serverURL = 'http://localhost:8080/users/login';
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onLogin = this.onLogin.bind(this);
@@ -17,6 +19,16 @@ export default class Login extends Component {
   onLogin() {
     console.log("username: " + this.state.username);
     console.log("password: " + this.state.password);
+
+    axios.post(this.serverURL)
+        .then(response => {
+          console.log(response);
+          this.props.history.push("/main");
+        })
+        .catch(err => {
+          console.log(err);
+          this.props.history.push("/");
+        });
 
     this.props.history.push("/main");
   }

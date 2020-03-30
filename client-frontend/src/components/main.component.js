@@ -5,10 +5,7 @@ export default class MainComponent extends Component {
   constructor(props) {
     super(props);
     
-    console.log("props.location" , props.location);  
-    console.log("props.history" , props.history);   
-    console.log("props.history.state" , props.history.state);   
-    console.log("props.history.location" , props.history.location);  
+    console.log(" props.history.location.state.username" , props.history.location.state.username);  
   }
 
   render() {

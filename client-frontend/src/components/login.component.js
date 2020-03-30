@@ -38,8 +38,7 @@ export default class Login extends Component {
           this.props.history.push(
             "/main",
             {
-              username: this.state.username,
-              other: "other"
+              username: this.state.username
             }
           );
         })
@@ -47,8 +46,6 @@ export default class Login extends Component {
           console.log("catch Err");
           console.log(err);
         });
-
-    this.props.history.push("/main");
   }
 
   onChangeUsername(e) {

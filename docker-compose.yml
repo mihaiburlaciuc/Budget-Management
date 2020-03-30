@@ -14,9 +14,9 @@ services:
     backend:
         image: mihaiburlaciuc/budget-app-node
         build: ./backend
-        command: "node server.js"
+        command: "nodemon server.js"
         volumes:
-            - ./backend:/usr/app/
+            - ./backend:/app/
             - /usr/app/node_modules
         ports:
          - "8080:8080"

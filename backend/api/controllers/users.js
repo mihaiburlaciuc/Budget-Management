@@ -6,7 +6,7 @@ const User = require("../models/users");
 
 exports.user_register = (req, res, next) => {
     console.log("register/ " );
-
+    console.log("register2/ " );
     // TODO: Remove once DB is up
     res.status(201).json({
         message: "User created"

@@ -31,3 +31,7 @@ docker-compose up
 ```
 
 - verify by using a post req to ```http://localhost:8080/users/signup```
+
+## Add nodemon
+
+## Access bash from container: ```docker exec -it <container name> /bin/bash  ``` 

@@ -21,17 +21,24 @@ export default class Register extends Component {
         console.log("username: " + this.state.username);
         console.log("password: " + this.state.password);
 
-        axios.post(this.serverURL)
+        const registerReq = {
+          username: this.state.username,
+          password: this.state.password
+        }; 
+
+        axios.post(this.serverURL, registerReq)
         .then(response => {
           console.log(response);
-          this.props.history.push("/");
+
+          if (response.status == 201) {
+            console.log("Register succesful")
+            this.props.history.push("/");
+          }
+          
         })
         .catch(err => {
           console.log("Axios error: ", err);
-          this.props.history.push("/");
         });
-
-        
     }
 
     onChangeUsername(e) {

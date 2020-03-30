@@ -6,7 +6,19 @@
 ## !!! ```stdin_open: true``` must be added to docker-compose in order for the react app not to crash
 Source: https://stackoverflow.com/questions/60790440/docker-container-exiting-immediately-after-starting-when-using-npm-init-react-ap
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Issues found during the dev
+* Axios gives you the following error if the api does not return a response code between 200 and 300
+```
+Error: Request failed with status code 401
+    at createError (createError.js:16)
+    at settle (settle.js:17)
+    at XMLHttpRequest.handleLoad (xhr.js:61)
+```
+
+
+
+
+# This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 

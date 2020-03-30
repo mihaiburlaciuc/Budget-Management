@@ -19,15 +19,27 @@ export default class Login extends Component {
   onLogin() {
     console.log("username: " + this.state.username);
     console.log("password: " + this.state.password);
+    console.log("loginReqBAAAA");
 
-    axios.post(this.serverURL)
+    const loginReq = {
+      username: this.state.username,
+      password: this.state.password
+    }; 
+
+    console.log("loginReq " + loginReq.username + " " +loginReq.password);
+
+    axios.post(this.serverURL, loginReq)
         .then(response => {
-          console.log(response);
+          console.log("then Respose");
+          console.log("Respose", response.data);
+          console.log("Respose status", response.status);
+            
+
           this.props.history.push("/main");
         })
         .catch(err => {
+          console.log("catch Err");
           console.log(err);
-          this.props.history.push("/");
         });
 
     this.props.history.push("/main");

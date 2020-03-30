@@ -5,20 +5,17 @@ const mongoose = require("mongoose");
 const User = require("../models/users");
 
 exports.user_register = (req, res, next) => {
-    console.log("register/ " );
-    console.log("register2/ " );
-    // TODO: Remove once DB is up
-    res.status(201).json({
-        message: "User created"
-    });
+    console.log("Req.body: " + JSON.stringify(req.body));
+    console.log("Req body " + req.body.username + " " + req.body.password);
+    console.log("register/ called ");
 
     User.find({ username: req.body.username })
     .exec()
     .then(user => {
-        // Verify if the email is already in use
+        // Verify if the username is already in use
         if (user.length >= 1) {
-            return res.status(409).json({
-                message: "Mail exists"
+            return res.status(209).json({
+                message: "Username already exists"
             });
         } else {
             const user = new User({
@@ -44,11 +41,15 @@ exports.user_register = (req, res, next) => {
 };
 
 exports.user_login =  (req, res, next) => {
+    console.log("/login");
+    console.log("Req.body: " + JSON.stringify(req.body));
+    console.log("Req body " + req.body.username + " " + req.body.password);
+
     User.find({ username: req.body.username })
     .exec()
     .then(user => {
         if (user.length < 1) {
-            return res.status(401).json({
+            return res.status(201).json({
                 message: "Auth failed"
             });
         }
@@ -58,7 +59,7 @@ exports.user_login =  (req, res, next) => {
                 message: "Auth successful"
             });
         } else {
-            res.status(401).json({
+            res.status(201).json({
                 message: "Auth failed"
             });
         }
@@ -72,6 +73,8 @@ exports.user_login =  (req, res, next) => {
 }
 
 exports.getAll = (req, res, next) => {
+    console.log("/getAll was called ");
+
     User.find()
     .select("username password")
     .exec()

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json() );
 
 // Add headers for CORS
 app.use((req, res, next) => {
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 const mongoose = require("mongoose");
 // Protocol: mongodb://localhost:27017/test
-const DB_URI = "mongodb://mongo:27017/budget";
+const DB_URI = "mongodb://mongo:27017/budgetDB";
 
 
 
@@ -49,6 +49,7 @@ app.use('/users', userRoutes);
 
 // Catch all requests that go past /products or /orders
 app.use((req, res, next) => {
+    console.log("404 page not found: did you add the route?");
     const error = new Error('Not found');
     error.status = 404;
     next(error);

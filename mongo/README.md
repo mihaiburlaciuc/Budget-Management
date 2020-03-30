@@ -1,7 +1,7 @@
 # MongoDB guideline
 
-## Source: https://www.thachmai.info/2015/04/30/running-mongodb-container/
-
+## Connect to the container
+```docker exec -it <container-name> mongo```
 ## Run docker container
 ```sudo docker run -d -p 37017:27017 -v ./data:/data/db mongo```
 

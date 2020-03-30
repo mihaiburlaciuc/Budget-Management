@@ -33,9 +33,15 @@ export default class Login extends Component {
           console.log("then Respose");
           console.log("Respose", response.data);
           console.log("Respose status", response.status);
-            
+          
 
-          this.props.history.push("/main");
+          this.props.history.push(
+            "/main",
+            {
+              username: this.state.username,
+              other: "other"
+            }
+          );
         })
         .catch(err => {
           console.log("catch Err");
@@ -61,6 +67,8 @@ export default class Login extends Component {
       return (
           <div>
             <h1>Budget Management App</h1>
+            
+            
             <div className="form-group"> 
               <label>Username: </label>
               <input  type="text"

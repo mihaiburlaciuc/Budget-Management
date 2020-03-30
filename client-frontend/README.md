@@ -15,6 +15,9 @@ Error: Request failed with status code 401
     at XMLHttpRequest.handleLoad (xhr.js:61)
 ```
 
+* React history is mutable
+Link https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md
+
 
 
 

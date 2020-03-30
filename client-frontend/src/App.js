@@ -4,7 +4,7 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 
 import Login from "./components/login.component";
-import { MainPage } from "./components/main.page";
+import MainComponent from "./components/main.component";
 import Register from "./components/register.component";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -15,9 +15,8 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/" component={Login} />
-          <Route exact path="/main" component={MainPage} />
+          <Route exact path="/main" component={MainComponent} />
           <Route exact path="/register" component={Register} />
-          {/* <ProtectedRoute exact path="/app" component={AppLayout} /> */}
           <Route path="*" component={() => "404 NOT FOUND"} />
         </Switch>
       </div>

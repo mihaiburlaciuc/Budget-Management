@@ -30,7 +30,7 @@ export default class Register extends Component {
         .then(response => {
           console.log(response);
 
-          if (response.status == 201) {
+          if (response.status === 201) {
             console.log("Register succesful")
             this.props.history.push("/");
           }

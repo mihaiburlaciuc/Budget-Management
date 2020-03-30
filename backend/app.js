@@ -25,15 +25,11 @@ const mongoose = require("mongoose");
 // Protocol: mongodb://localhost:27017/test
 const DB_URI = "mongodb://mongo:27017/budgetDB";
 
-
-
-
+console.log("_________________________ NODE.JS BACKEND STARTED ________________________");
 mongoose.connect(DB_URI).then(() => {
-    console.log("_________________________ NODEJS => APP.JS ________________________");
     console.log("Connected to mongo db");
 })
 .catch(err => {
-    console.log("_________________________ NODEJS => APP.JS ________________________");
     console.log("Mongo err " + err);
 });
 

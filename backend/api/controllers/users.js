@@ -70,3 +70,23 @@ exports.user_login =  (req, res, next) => {
         });
     });
 }
+
+exports.getAll = (req, res, next) => {
+    User.find()
+    .select("username password")
+    .exec()
+    .then(docs => {
+        console.log("getAll/ request: Users", docs);
+
+        res.status(201).json({
+            users: docs
+        })
+    })
+    .catch(err => {
+        console.log("getAll/ ", err);
+
+        res.status(500).json({
+            error: err
+          });
+    });
+}

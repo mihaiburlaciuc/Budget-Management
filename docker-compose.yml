@@ -4,16 +4,22 @@ services:
         image: mihaiburlaciuc/budget-app-client-frontend
         build: ./client-frontend
         command: "npm start"
+        volumes:
+            - ./client-frontend:/app/
+            - '/app/node_modules'
         stdin_open: true
         ports:
-         - "3001:3000"
+         - "3000:3000"
     
     backend:
         image: mihaiburlaciuc/budget-app-node
         build: ./backend
         command: "node server.js"
+        volumes:
+            - ./backend:/usr/app/
+            - /usr/app/node_modules
         ports:
-         - "8081:8080"
+         - "8080:8080"
         depends_on: 
          - "mongo"
          

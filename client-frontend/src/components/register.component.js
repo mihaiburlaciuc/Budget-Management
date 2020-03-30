@@ -6,7 +6,7 @@ export default class Register extends Component {
   constructor(props) {
     super(props);
 
-    this.serverURL = 'http://localhost:8080/users';
+    this.serverURL = 'http://localhost:8080/users/register';
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onDone = this.onDone.bind(this);
@@ -21,13 +21,13 @@ export default class Register extends Component {
         console.log("username: " + this.state.username);
         console.log("password: " + this.state.password);
 
-        axios.post(this.serverURL + '/register')
+        axios.post(this.serverURL)
         .then(response => {
           console.log(response);
           this.props.history.push("/");
         })
         .catch(err => {
-          console.log(err);
+          console.log("Axios error: ", err);
           this.props.history.push("/");
         });
 
@@ -52,7 +52,7 @@ export default class Register extends Component {
             <h1>Register</h1>
             
             <div className="form-group"> 
-              <label>Username: </label>
+              <label>Usernames </label>
               <input  type="text"
                   required
                   className="form-control"

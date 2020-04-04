@@ -8,6 +8,7 @@ Source: https://stackoverflow.com/questions/60790440/docker-container-exiting-im
 
 ## Issues found during the dev
 * Axios gives you the following error if the api does not return a response code between 200 and 300
+* props.history.location undefined after pushing a page to history due to double call, once from the main method and the second one from the async then() call
 ```
 Error: Request failed with status code 401
     at createError (createError.js:16)

@@ -33,12 +33,13 @@ export default class Login extends Component {
           console.log("then Respose");
           console.log("Respose", response.data);
           console.log("Respose status", response.status);
-          
+          let token = response.data.token;
 
           this.props.history.push(
             "/main",
             {
-              username: this.state.username
+              username: this.state.username,
+              token: token
             }
           );
         })
@@ -64,7 +65,6 @@ export default class Login extends Component {
       return (
           <div>
             <h1>Budget Management App</h1>
-            
             
             <div className="form-group"> 
               <label>Username: </label>

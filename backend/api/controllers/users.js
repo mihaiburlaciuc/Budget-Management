@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const User = require("../models/users");
 
 exports.user_register = (req, res, next) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    let balance = req.body.balance;
+
     console.log("Req.body: " + JSON.stringify(req.body));
-    console.log("Req body " + req.body.username + " " + req.body.password);
+    console.log("Req body " + username + " " + password + " " + balance);
     console.log("register/ called ");
 
-    User.find({ username: req.body.username })
+    User.find({ username: username })
     .exec()
     .then(user => {
         // Verify if the username is already in use
@@ -19,8 +22,9 @@ exports.user_register = (req, res, next) => {
             });
         } else {
             const user = new User({
-                username: req.body.username,
-                password: req.body.password
+                username: username,
+                password: password,
+                balance: balance
             });
             
             user.save()
@@ -41,9 +45,11 @@ exports.user_register = (req, res, next) => {
 };
 
 exports.user_login =  (req, res, next) => {
+    let username = req.body.username;
+    let password = req.body.password;
     console.log("/login");
     console.log("Req.body: " + JSON.stringify(req.body));
-    console.log("Req body " + req.body.username + " " + req.body.password);
+    console.log("Req body " + username + " " + password);
 
     User.find({ username: req.body.username })
     .exec()
@@ -53,10 +59,19 @@ exports.user_login =  (req, res, next) => {
                 message: "Auth failed"
             });
         }
-
+        
+        const jwtKey = "JWT_SECRET_BUGET_APP";
         if (user[0].password === req.body.password) {
+            const token = jwt.sign(
+                {
+                    username: username
+                },
+                jwtKey,
+            );
+
             return res.status(200).json({
-                message: "Auth successful"
+                message: "Auth successful",
+                token: token
             });
         } else {
             res.status(201).json({

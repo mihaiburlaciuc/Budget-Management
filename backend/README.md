@@ -19,6 +19,8 @@ List images: ```docker images```
 ## Push changes
 ```docker push mihaiburlaciuc/budget-app-node:tagname```
 
+## SSH / BASH
+```docker exec -it <container name> /bin/bash ```
 ## Services
 
 ### Create docker-compose.yml

@@ -6,25 +6,13 @@ export default class TransactionComponent extends Component {
     constructor(props) {
       super(props);
       
-      let transact1 = {
-        operation: "lent to",
-        targetUser: "user1",
-        amount: 500
-      };
-      let transact2 = {
-        operation: "borrowed from",
-        targetUser: "user12",
-        amount: 5002
-      };
-
-      let transactions = [transact1, transact2];
+      
 
       this.state = {
         username: props.history.location.state.username,
         token: props.history.location.state.token,
         targetUsername: '',
-        operation: 'Lent money to',
-        transactions: transactions
+        operation: 'Lent money to'
       }
     }
 

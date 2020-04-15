@@ -108,3 +108,20 @@ exports.getAll = (req, res, next) => {
           });
     });
 }
+
+exports.addTransaction = (req, res, next) => {
+    console.log("/addTransaction was called ");
+    // 1 = LENDING, 2 = BORROWING
+    let operation = req.body.operation;
+    let mainUser = req.body.userData;
+    let targetUser = req.body.targetUser;
+    let amount = req.body.amount
+
+}
+
+// Reports = status between 2 users
+exports.getUserReports= (req, res, next) => {
+    console.log("/addTransaction was called ");
+    let mainUser = req.body.userData;
+
+}

@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(" ")[1];
         const jwtKey = "JWT_SECRET_BUGET_APP";
         const decoded = jwt.verify(token, jwtKey);
-        req.userData = decoded;
+        req.userData = decoded.username;
         next();
     } catch (error) {
         console.log("JWT verification failed");

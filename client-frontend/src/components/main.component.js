@@ -10,13 +10,27 @@ export default class MainComponent extends Component {
     console.log("props.history.location.state.username" , props.history.location.state.username);  
     console.log("props.history.location.state.token" , props.history.location.state.token);  
 
+    let transact1 = {
+      operation: "lent to",
+      targetUser: "user1",
+      amount: 500
+    };
+    let transact2 = {
+      operation: "borrowed from",
+      targetUser: "user12",
+      amount: 5002
+    };
+
+    let transactions = [transact1, transact2];
+
     this.state = {
       username: props.history.location.state.username,
       token: props.history.location.state.token,
       balance: 0,
       amountLent: 0,
       amountOwed: 0,
-      relativeBalance: 0
+      relativeBalance: 0,
+      transactions: transactions
     }
   }
 
@@ -54,30 +68,22 @@ export default class MainComponent extends Component {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Username</th>
+                  <th>Opertation</th>
+                  <th>User</th>
+                  <th>Amount</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td colSpan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
+              {
+              this.state.transactions.map( (tranaction, index,) => (
+                  <tr>
+                    <td>{index}</td>
+                    <td>{tranaction.operation}</td>
+                    <td>{tranaction.targetUser}</td>
+                    <td>{tranaction.amount}</td>
+                  </tr>
+                )
+              )
+              }
             </Table>
           </div>  
 
@@ -85,10 +91,34 @@ export default class MainComponent extends Component {
           <Container>
             <Row>
               <Col>
-              <Button variant="outline-primary" block>New Transaction</Button>{' '}
+                <Button 
+                variant="outline-primary"
+                block
+                onClick={() => {
+                  this.props.history.push(
+                    "/transaction",
+                    {
+                      username: this.state.username,
+                      token: this.state.token
+                    }
+                  );
+                }}
+                >New Transaction</Button>{' '}
               </Col>
               <Col>
-              <Button variant="outline-success" block>Settle</Button>{' '}
+              <Button
+              variant="outline-success"
+              block
+              onClick={() => {
+                this.props.history.push(
+                  "/settle",
+                  {
+                    username: this.state.username,
+                    token: this.state.token
+                  }
+                );
+              }}
+              >Settle</Button>{' '}
               </Col>
             </Row>
             

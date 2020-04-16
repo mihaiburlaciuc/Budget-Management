@@ -36,6 +36,10 @@ export default class MainComponent extends Component {
     }
   }
 
+  componentWillMount() {
+    console.log("componentWillMount");
+  }
+
   onModifyBalance(sign) {
     this.serverURL = 'http://localhost:8080/users/modifyBalance';
 

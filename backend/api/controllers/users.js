@@ -160,7 +160,7 @@ async function upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmo
     .exec()
     .then(docs => {
         // Conflict does not exist => Create
-        if (docs.length >= 1) {
+        if (docs.length < 1) {
             console.log("Creating Conflict between src: " + srcEntity + " and dst: " + dstEntity);
             let conflict = new Conflict({
                 srcEntity: srcEntity,
@@ -170,24 +170,48 @@ async function upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmo
                 srcOwedAmount: srcOwedAmount
             });
 
-            conflict.save();
+            conflict.save()
+            .catch(err => {
+                throw err
+            });
         } else {
+            let doc = docs[0];
             let newSrcOwedAmount = doc.srcOwedAmount + srcOwedAmount;
 
             Conflict.update(
                 {srcEntity: srcEntity, dstEntity: dstEntity}, 
-                {srcOwedAmount: newSrcOwedAmount}).exec();
+                {srcOwedAmount: newSrcOwedAmount}
+            )
+            .exec()
+            .catch(err => {
+                throw err
+            });
         }
-    });    
+    })
+    .catch(err => {
+        throw err
+    });   
+}
+
+async function addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedAmount) {
+    await upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmount)
+    .catch(err => {
+        throw err
+    });
+
+    await upsertConflict(dstEntity, srcEntity, dstType, srcType, (-1) * srcOwedAmount)
+    .catch(err => {
+        throw err
+    });
 }
 
 exports.addConflict = (req, res, next) => {
-    console.log("/addConflict was called ");
+    console.log("/addConflict was called ", req.body);
     // 1 = LENDING, 2 = BORROWING, 3 = VENDOR_OWEING
     let operation = req.body.operation;
-    let srcEntity = req.body.username;
-    let dstEntity = req.body.targetEntity;
-    let srcOwedAmount = req.body.amount;
+    let srcEntity = req.body.srcEntity;
+    let dstEntity = req.body.dstEntity;
+    let srcOwedAmount = req.body.srcOwedAmount;
     let srcType = "user";
     let dstType;
 
@@ -207,28 +231,18 @@ exports.addConflict = (req, res, next) => {
         dstType = "vendor";
     }
 
-    upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmount)
+    addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedAmount)
     .then(() => {
-        // insert the mirror conflict
-        upsertConflict(dstEntity, srcEntity, dstType, srcType, (-1) * srcOwedAmount)
-        .then(() => {
-            res.status(201).json({
-                message: "Added conflict successful"
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            }); 
-        })
+        res.status(201).json({
+            message: "Added conflict successful"
+        });
     })
     .catch(err => {
         console.log(err);
         res.status(500).json({
             error: err
         }); 
-    })
+    });
 }
 
 // Conflict = status between 2 users

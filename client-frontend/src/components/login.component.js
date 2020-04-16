@@ -34,12 +34,14 @@ export default class Login extends Component {
           console.log("Respose", response.data);
           console.log("Respose status", response.status);
           let token = response.data.token;
+          let balance = response.data.balance;
 
           this.props.history.push(
             "/main",
             {
               username: this.state.username,
-              token: token
+              token: token,
+              balance: balance
             }
           );
         })

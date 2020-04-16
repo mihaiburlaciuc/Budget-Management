@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
 
 const User = require("../models/users");
+const Conflict = require("../models/conflict");
 
 exports.user_register = (req, res, next) => {
     let username = req.body.username;
@@ -66,12 +67,13 @@ exports.user_login =  (req, res, next) => {
                 {
                     username: username
                 },
-                jwtKey,
+                jwtKey
             );
 
             return res.status(200).json({
                 message: "Auth successful",
-                token: token
+                token: token,
+                balance: user[0].balance
             });
         } else {
             res.status(201).json({
@@ -109,19 +111,187 @@ exports.getAll = (req, res, next) => {
     });
 }
 
-exports.addTransaction = (req, res, next) => {
-    console.log("/addTransaction was called ");
-    // 1 = LENDING, 2 = BORROWING
-    let operation = req.body.operation;
-    let mainUser = req.body.userData;
-    let targetUser = req.body.targetUser;
-    let amount = req.body.amount
+exports.modifyBalance = (req, res, next) => {
+    console.log("/modifyBalance was called ", req.body);
+    let username = req.userData;
+    let balanceModifier = req.body.balanceModifier;
 
+    console.log("/modifyBalance was called 2", (balanceModifier + 1));
+
+    User.find({username: username})
+    .exec()
+    .then(docs => {
+        if (docs.length < 1) {
+            return res.status(209).json({
+                message: "Username does not exist"
+            });
+        }
+
+        console.log("user doc ", docs[0]);
+
+        let currentBalance = parseInt(docs[0].balance);
+        currentBalance += balanceModifier;
+
+        // Update with new balance
+        User.update({username: username}, {balance: currentBalance}).exec()
+        .then(() => {
+            return res.status(201).json({
+                newBalance: currentBalance
+            })
+        }).catch(err => {
+            console.log("User.update({username: username}, {balance = currentBalance})/ ", err);
+    
+            res.status(500).json({
+                error: err
+              });
+        });
+    })
+    .catch(err => {
+        console.log("getAll/ ", err);
+
+        res.status(500).json({
+            error: err
+          });
+    });
 }
 
-// Reports = status between 2 users
-exports.getUserReports= (req, res, next) => {
-    console.log("/addTransaction was called ");
-    let mainUser = req.body.userData;
+async function upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmount) {
+    Conflict.find({srcEntity: srcEntity, dstEntity: dstEntity})
+    .exec()
+    .then(docs => {
+        // Conflict does not exist => Create
+        if (docs.length >= 1) {
+            console.log("Creating Conflict between src: " + srcEntity + " and dst: " + dstEntity);
+            let conflict = new Conflict({
+                srcEntity: srcEntity,
+                dstEntity: dstEntity,
+                srcType: srcType,
+                dstType: dstType,
+                srcOwedAmount: srcOwedAmount
+            });
 
+            conflict.save();
+        } else {
+            let newSrcOwedAmount = doc.srcOwedAmount + srcOwedAmount;
+
+            Conflict.update(
+                {srcEntity: srcEntity, dstEntity: dstEntity}, 
+                {srcOwedAmount: newSrcOwedAmount}).exec();
+        }
+    });    
+}
+
+exports.addConflict = (req, res, next) => {
+    console.log("/addConflict was called ");
+    // 1 = LENDING, 2 = BORROWING, 3 = VENDOR_OWEING
+    let operation = req.body.operation;
+    let srcEntity = req.body.username;
+    let dstEntity = req.body.targetEntity;
+    let srcOwedAmount = req.body.amount;
+    let srcType = "user";
+    let dstType;
+
+    if (srcEntity === dstEntity) {
+        return res.status(209).json({
+            message: "Can not lend to/borrow from yourself"
+        }); 
+    }
+
+    if (operation === 1) {
+        dstType = "user";
+        // The user does not owe money when lending
+        srcOwedAmount = (-1) * srcOwedAmount;
+    } else if (operation === 2) {
+        dstType = "user";
+    } else if (operation === 3) {
+        dstType = "vendor";
+    }
+
+    upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmount)
+    .then(() => {
+        // insert the mirror conflict
+        upsertConflict(dstEntity, srcEntity, dstType, srcType, (-1) * srcOwedAmount)
+        .then(() => {
+            res.status(201).json({
+                message: "Added conflict successful"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            }); 
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        }); 
+    })
+}
+
+// Conflict = status between 2 users
+exports.getEntityConflicts = (req, res, next) => {
+    console.log("/getUserConflicts was called ");
+    let srcEntity = req.body.srcEntity;
+
+    Conflict.find({srcEntity: srcEntity})
+    .exec()
+    .then(docs => {
+        res.status(201).json({
+            conflicts: docs
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        }); 
+    });
+}
+
+exports.getEntityTransaction = (req, res, next) => {
+    console.log("/getUserConflicts was called ");
+    let srcEntity = req.body.srcEntity;
+    let transactions = []
+
+    Conflict.find({srcEntity: srcEntity})
+    .exec()
+    .then(docs => {
+        for (doc in docs) {
+            let operation;
+            let displayedAmount = doc.srcOwedAmount;
+            let operationType;
+
+            if (doc.dstEntity === 'vendor') {
+                operation = "OWED TO";
+                operationType = 1;
+            } else if (docs.srcOwedAmount > 0) {
+                operation = "BORROWED FROM";
+                operationType = 2;
+            } else {
+                operation = "LENT TO";
+                displayedAmount = (-1) * displayedAmount;
+                operationType = 3;
+            }
+
+            transactions.push({
+                operation: operation,
+                operationType: operationType,
+                entity: srcEntity,
+                amount: displayedAmount
+            })
+        }
+
+        return res.status(201).json({
+            transactions: transactions
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        }); 
+    });
 }

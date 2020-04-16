@@ -11,6 +11,14 @@
 # Change mydb to the name of your DB
 ```mongo localhost/mydb```
 
+# Usefull
+```
+docker exec -it budgetapp_mongo_1 bash
+show dbs
+use budgetDB
+show collections
+db.users.find()
+```
 # Other res
 link: https://medium.com/@anuradhs/connect-to-mongodb-docker-container-with-authentication-using-mongoose-and-nodejs-6319bea82e9d
 

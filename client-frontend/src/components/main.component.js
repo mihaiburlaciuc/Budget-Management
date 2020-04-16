@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import { InputGroup, FormControl, Container, Row, Col, Button, Table } from 'react-bootstrap';
+import { InputGroup, Form, Container, Row, Col, Button, Table } from 'react-bootstrap';
 
 // https://react-bootstrap.github.io/components/buttons/
 export default class MainComponent extends Component {
@@ -9,6 +9,7 @@ export default class MainComponent extends Component {
     
     console.log("props.history.location.state.username" , props.history.location.state.username);  
     console.log("props.history.location.state.token" , props.history.location.state.token);  
+    console.log("props.history.location.state.balance" , props.history.location.state.balance);  
 
     let transact1 = {
       operation: "lent to",
@@ -26,19 +27,52 @@ export default class MainComponent extends Component {
     this.state = {
       username: props.history.location.state.username,
       token: props.history.location.state.token,
-      balance: 0,
+      balance: props.history.location.state.balance,
       amountLent: 0,
       amountOwed: 0,
       relativeBalance: 0,
-      transactions: transactions
+      transactions: transactions,
+      balanceModifier: 0
     }
   }
 
-  // table() {
-  //   return (
-      
-  //   );
-  // };
+  onModifyBalance(sign) {
+    this.serverURL = 'http://localhost:8080/users/modifyBalance';
+
+    var balanceModifier = this.state.balanceModifier
+    if (sign === "Minus") {
+      balanceModifier *= (-1);
+    }
+
+    let modifyBalanceReq = {
+      token: this.state.token,
+      balanceModifier: balanceModifier
+    };
+
+    console.log("onModifyBalance: modifyBalanceReq" , modifyBalanceReq);
+
+    axios.post(this.serverURL, modifyBalanceReq)
+    .then(response => {
+      console.log("then Respose");
+      console.log("Respose", response.data);
+      console.log("Respose status", response.status);
+      let newBalance = response.data.newBalance;
+
+      this.setState({
+        balance: newBalance
+      });
+    })
+    .catch(err => {
+      console.log("catch Err");
+      console.log(err);
+    });
+  }
+
+  onChangeBalanceModifier(e) {
+    this.setState({
+      balanceModifier: e.target.value
+    })
+  }
 
   render() {
     return (
@@ -47,8 +81,41 @@ export default class MainComponent extends Component {
         <h3>Logged in as {this.state.username} </h3>
         <div>
         <br />
-
+        <br />
           <Container>
+            <Row>
+              <Col lg={4}>
+                <h4>Modify balance: </h4>
+              </Col>
+              <Col>
+                <Form.Control 
+                value = { this.state.balanceModifier }
+                onChange ={ e => this.onChangeBalanceModifier(e) }
+                type="number"
+                placeholder="amount"
+                />
+              </Col>
+              <Col>
+                <Button 
+                  variant="outline-primary"
+                  block
+                  onClick={() => {
+                    this.onModifyBalance("Plus");
+                  }}
+                >+</Button>{' '}
+              </Col>
+              <Col>
+                <Button 
+                  variant="outline-primary"
+                  block
+                  onClick={() => {
+                    this.onModifyBalance("Minus");
+                  }}
+                >-</Button>{' '}
+              </Col>
+            </Row>
+            <br />
+            <br />
             <Row>
               <Col>
                 <h2> Amount lent:<br /> {this.state.amountLent} RON  </h2>

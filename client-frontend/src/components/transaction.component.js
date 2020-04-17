@@ -43,8 +43,10 @@ export default class TransactionComponent extends Component {
       let operation;
 
       if (this.state.lentToChecked) {
+        // LENT
         operation = 1;
       } else {
+        // BORROWED
         operation = 2;
       }
 
@@ -76,6 +78,35 @@ export default class TransactionComponent extends Component {
         console.log("catch Err");
         console.log(err);
       });
+
+      /*
+      // Modify user balance
+      let modifyBalanceURL = 'http://localhost:8080/users/modifyBalance';
+      // casting to int
+      var balanceModifier = this.state.amount * 1;
+      // Lenting => giving the money
+      if (operation == 1) {
+        balanceModifier *= (-1);
+      }
+
+      let modifyBalanceReq = {
+        token: this.state.token,
+        balanceModifier: balanceModifier
+      };
+
+      console.log("transaction: modifyBalanceReq" , modifyBalanceReq);
+
+      axios.post(modifyBalanceURL, modifyBalanceReq)
+      .then(response => {
+        console.log("then Respose");
+        console.log("Respose", response.data);
+        
+      })
+      .catch(err => {
+        console.log("catch Err");
+        console.log(err);
+      });
+      */
     }
     
     handleToggle() {

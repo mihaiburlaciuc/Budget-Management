@@ -137,20 +137,12 @@ exports.getAll = (req, res, next) => {
     });
 }
 
-exports.modifyBalance = (req, res, next) => {
-    console.log("/modifyBalance was called ", req.body);
-    let username = req.userData;
-    let balanceModifier = req.body.balanceModifier;
-
-    console.log("/modifyBalance was called 2", (balanceModifier + 1));
-
-    User.find({username: username})
+async function modifyUserBalance(username, balanceModifier) {
+    return User.find({username: username})
     .exec()
     .then(docs => {
         if (docs.length < 1) {
-            return res.status(209).json({
-                message: "Username does not exist"
-            });
+            throw "Username does not exist";
         }
 
         console.log("user doc ", docs[0]);
@@ -159,21 +151,36 @@ exports.modifyBalance = (req, res, next) => {
         currentBalance += balanceModifier;
 
         // Update with new balance
-        User.update({username: username}, {balance: currentBalance}).exec()
+        return User.update({username: username}, {balance: currentBalance}).exec()
         .then(() => {
-            return res.status(201).json({
-                newBalance: currentBalance
-            })
+            return currentBalance;
         }).catch(err => {
             console.log("User.update({username: username}, {balance = currentBalance})/ ", err);
     
-            res.status(500).json({
-                error: err
-              });
+            throw err;
         });
     })
     .catch(err => {
-        console.log("getAll/ ", err);
+        console.log("modifyUserBalance/ ", err);
+
+        throw err;
+    });
+}
+
+exports.modifyBalance = (req, res, next) => {
+    console.log("/modifyBalance was called ", req.body);
+    let username = req.userData;
+    let balanceModifier = req.body.balanceModifier * 1;
+
+    modifyUserBalance(username, balanceModifier)
+    .then(newBalance => {
+        console.log("newBalance" + newBalance);
+        return res.status(201).json({
+            newBalance: newBalance
+        })
+    })
+    .catch(err => {
+        console.log("modifyBalance/ ", err);
 
         res.status(500).json({
             error: err
@@ -220,6 +227,7 @@ async function upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmo
 }
 
 async function addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedAmount) {
+    srcOwedAmount = 1 * srcOwedAmount;
     await upsertConflict(srcEntity, dstEntity, srcType, dstType, srcOwedAmount)
     .catch(err => {
         throw err
@@ -270,6 +278,17 @@ exports.addConflict = (req, res, next) => {
             error: err
         }); 
     });
+
+    // Modify balance
+    if (srcType === "user" && dstType === "user") {
+        let srcBalanceModifier = srcOwedAmount * 1;
+        let dstBalanceModifier = srcOwedAmount * (-1);
+    
+        console.log("modifying balance for " + srcEntity + " by adding " + srcBalanceModifier);
+        console.log("modifying balance for " + dstEntity + " by adding " + dstBalanceModifier);
+        modifyUserBalance(srcEntity, srcBalanceModifier);
+        modifyUserBalance(dstEntity, dstBalanceModifier);
+    }
 }
 
 // Conflict = status between 2 users
@@ -321,6 +340,7 @@ exports.getEntityTransaction = (req, res, next) => {
             } else {
                 operation = "LENT TO";
                 operationType = 1;
+                displayedAmount *= (-1);
             }
 
             let transaction = {

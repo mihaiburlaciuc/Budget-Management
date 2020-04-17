@@ -11,18 +11,6 @@ export default class MainComponent extends Component {
     console.log("props.history.location.state.token" , props.history.location.state.token);  
     console.log("props.history.location.state.balance" , props.history.location.state.balance);  
 
-    let transact1 = {
-      operation: "lent to",
-      targetUser: "user1",
-      amount: 500
-    };
-    let transact2 = {
-      operation: "borrowed from",
-      targetUser: "user12",
-      amount: 5002
-    };
-
-    let transactions = [transact1, transact2];
 
     this.state = {
       username: props.history.location.state.username,
@@ -31,7 +19,7 @@ export default class MainComponent extends Component {
       amountLent: 0,
       amountOwed: 0,
       relativeBalance: 0,
-      transactions: transactions,
+      transactions: [],
       balanceModifier: 0
     }
   }
@@ -74,12 +62,36 @@ export default class MainComponent extends Component {
       console.log("catch Err");
       console.log(err);
     });
+
+    // get balance req
+    let getBalanceURL = 'http://localhost:8080/users/getBalance';
+    let getBalanceReq = {
+      token: this.state.token
+    }
+
+    axios.post(getBalanceURL, getBalanceReq)
+    .then(response => {
+      console.log("getBalanceReq Respose", response.status, response.data);
+      let balance = response.data.balance
+
+      let relativeBalance = balance + this.state.amountLent - this.state.amountOwed;
+
+      this.setState({
+        balance: balance,
+        relativeBalance: relativeBalance,
+      });
+    })
+    .catch(err => {
+      console.log("catch Err");
+      console.log(err);
+    });
   }
 
   onModifyBalance(sign) {
     this.serverURL = 'http://localhost:8080/users/modifyBalance';
 
-    var balanceModifier = this.state.balanceModifier
+    // casting to int
+    var balanceModifier = this.state.balanceModifier * 1;
     if (sign === "Minus") {
       balanceModifier *= (-1);
     }
@@ -98,8 +110,10 @@ export default class MainComponent extends Component {
       console.log("Respose status", response.status);
       let newBalance = response.data.newBalance;
 
+      let relativeBalance = newBalance + this.state.amountLent - this.state.amountOwed;
       this.setState({
-        balance: newBalance
+        balance: newBalance,
+        relativeBalance: relativeBalance
       });
     })
     .catch(err => {

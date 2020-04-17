@@ -14,6 +14,8 @@ router.post("/addConflict", checkAuth, UserController.addConflict);
 
 router.post("/getEntityTransaction", checkAuth, UserController.getEntityTransaction);
 
+router.post("/getBalance", checkAuth, UserController.getBalance);
+
 router.get("/getAll", UserController.getAll)
 
 module.exports = router;

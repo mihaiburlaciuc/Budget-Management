@@ -89,6 +89,32 @@ exports.user_login =  (req, res, next) => {
     });
 }
 
+exports.getBalance =  (req, res, next) => {
+    let username = req.userData;
+    console.log("/getBalance", req.body);
+
+    User.find({ username: username })
+    .exec()
+    .then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: "Auth failed"
+            });
+        }
+        
+        return res.status(200).json({
+            message: "Auth successful",
+            balance: user[0].balance
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}
+
 exports.getAll = (req, res, next) => {
     console.log("/getAll was called ");
 

@@ -37,7 +37,43 @@ export default class MainComponent extends Component {
   }
 
   componentWillMount() {
-    console.log("componentWillMount");
+    console.log("componentWillMount => getEntityTransaction");
+    let serverURL = 'http://localhost:8080/users/getEntityTransaction';
+
+    let getEntityTransactionReq = {
+      token: this.state.token,
+      srcEntity: this.state.username
+    }
+
+    axios.post(serverURL, getEntityTransactionReq)
+    .then(response => {
+      console.log("getEntityTransaction Respose", response.status, response.data);
+      let transactions = response.data.transactions;
+
+      var amountLent = 0;
+      var amountOwed = 0;
+      // Calculate relative
+      transactions.forEach(t => {
+        if (t.operationType === 1) {
+          amountLent += t.amount;
+        } else {
+          amountOwed += t.amount;
+        }
+      });
+
+      let relativeBalance = this.state.balance + amountLent - amountOwed;
+
+      this.setState({
+        transactions: transactions,
+        amountLent: amountLent,
+        amountOwed: amountOwed,
+        relativeBalance: relativeBalance,
+      });
+    })
+    .catch(err => {
+      console.log("catch Err");
+      console.log(err);
+    });
   }
 
   onModifyBalance(sign) {
@@ -149,7 +185,7 @@ export default class MainComponent extends Component {
                   <tr>
                     <td>{index}</td>
                     <td>{tranaction.operation}</td>
-                    <td>{tranaction.targetUser}</td>
+                    <td>{tranaction.dstEntity}</td>
                     <td>{tranaction.amount}</td>
                   </tr>
                 )

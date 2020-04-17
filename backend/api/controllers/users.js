@@ -199,6 +199,7 @@ async function addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedA
         throw err
     });
 
+    // Add mirror conflict
     await upsertConflict(dstEntity, srcEntity, dstType, srcType, (-1) * srcOwedAmount)
     .catch(err => {
         throw err
@@ -266,37 +267,45 @@ exports.getEntityConflicts = (req, res, next) => {
 }
 
 exports.getEntityTransaction = (req, res, next) => {
-    console.log("/getUserConflicts was called ");
+    console.log("/getEntityTransaction was called ", req.body);
     let srcEntity = req.body.srcEntity;
     let transactions = []
 
     Conflict.find({srcEntity: srcEntity})
     .exec()
     .then(docs => {
-        for (doc in docs) {
+        docs.forEach( doc => {
+            console.log("doc: ", doc);
+            // Conflict in settled
+            if (doc.amount === 0) {
+                console.log("Skipping conflict :" + srcEntity + " " + doc.dstEntity + " " + amount);
+                return;
+            }
+
             let operation;
             let displayedAmount = doc.srcOwedAmount;
             let operationType;
 
-            if (doc.dstEntity === 'vendor') {
+            if (doc.srcOwedAmount > 0 || doc.dstEntity === 'vendor') {
                 operation = "OWED TO";
-                operationType = 1;
-            } else if (docs.srcOwedAmount > 0) {
+                operationType = 3;
+            } else if (doc.srcOwedAmount > 0) {
                 operation = "BORROWED FROM";
                 operationType = 2;
             } else {
                 operation = "LENT TO";
-                displayedAmount = (-1) * displayedAmount;
-                operationType = 3;
+                operationType = 1;
             }
 
-            transactions.push({
+            let transaction = {
                 operation: operation,
                 operationType: operationType,
-                entity: srcEntity,
+                dstEntity: doc.dstEntity,
                 amount: displayedAmount
-            })
-        }
+            };
+            console.log("Transaction: ", transaction);
+            transactions.push(transaction);
+        });
 
         return res.status(201).json({
             transactions: transactions

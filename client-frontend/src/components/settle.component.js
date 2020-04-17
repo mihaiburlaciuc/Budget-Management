@@ -8,8 +8,13 @@ export default class SettleComponent extends Component {
 
 			this.state = {
         username: props.history.location.state.username,
-        token: props.history.location.state.token
+        token: props.history.location.state.token,
+        isVendorChecked: false
       }
+    }
+
+    handleChange(evt) {
+      this.setState({ isVendorChecked: evt.target.checked });
     }
 
     render() {
@@ -19,12 +24,18 @@ export default class SettleComponent extends Component {
 						<br />
 						<Form.Row>
 							<Form.Label column lg={2}>
-								<h4>Send to user</h4>
+								<h4>Send to:</h4>
 							</Form.Label>
 							<Col>
-								<Form.Control type="text" placeholder="target username" />
+								<Form.Control type="text" placeholder="target username/vendor" />
 							</Col>
 						</Form.Row>
+            <Form.Row>
+             <Form.Check type="checkbox" label="is vendor" checked={this.state.isVendorChecked}
+              onChange={(evt) => { this.handleChange(evt)} }/>
+            </Form.Row>
+            
+            
 						<br />
 						<Form.Row>
 							<Form.Label column lg={2}>

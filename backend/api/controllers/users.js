@@ -272,7 +272,7 @@ async function addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedA
 
 exports.addConflict = (req, res, next) => {
     console.log("/addConflict was called ", req.body);
-    // 1 = LENDING/ SETTLING, 2 = BORROWING, 3 = VENDOR_OWEING
+    // 1 = LENDING, 2 = BORROWING, 3 = VENDOR_OWEING, 4 = VENDOR_SETTLING
     let operation = req.body.operation;
     let srcEntity = req.body.srcEntity;
     let dstEntity = req.body.dstEntity;
@@ -294,6 +294,10 @@ exports.addConflict = (req, res, next) => {
         dstType = "user";
     } else if (operation === 3) {
         dstType = "vendor";
+    } else if (operation === 4) {
+        dstType = "vendor";
+        // The user does not owe money when settling
+        srcOwedAmount = (-1) * srcOwedAmount;
     }
 
     addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedAmount)

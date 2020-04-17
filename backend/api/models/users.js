@@ -6,5 +6,4 @@ const userSchema = new mongoose.Schema({
    balance: { type: Number, required: true }
 });
 
-// module.exports = User
 module.exports = mongoose.model('User', userSchema);

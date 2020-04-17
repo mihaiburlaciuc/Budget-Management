@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require("../models/users");
 const Conflict = require("../models/conflict");
+const Vendor = require("../models/vendor");
 
 exports.user_register = (req, res, next) => {
     let username = req.body.username;
@@ -56,7 +57,7 @@ exports.user_login =  (req, res, next) => {
     .exec()
     .then(user => {
         if (user.length < 1) {
-            return res.status(201).json({
+            return res.status(409).json({
                 message: "Auth failed"
             });
         }
@@ -167,6 +168,35 @@ async function modifyUserBalance(username, balanceModifier) {
     });
 }
 
+async function modifyVendorAmountToReceive(vendorName, increasedAmountToReceive) {
+    return Vendor.find({name: vendorName})
+    .exec()
+    .then(docs => {
+        if (docs.length < 1) {
+            throw "Vendor does not exist";
+        }
+
+        console.log("user doc ", docs[0]);
+
+        var amountToReceive = parseInt(docs[0].amountToReceive);
+        console.log("updating " + vendorName + "by increasing " 
+        + amountToReceive + " with " + increasedAmountToReceive );
+
+        amountToReceive += increasedAmountToReceive;
+
+
+        // Update with new balance
+        return Vendor.update({name: vendorName}, {amountToReceive: amountToReceive}).exec()
+        .then(() => {
+            return amountToReceive;
+        }).catch(err => {
+            console.log("User.update({name: vendorName}, {amountToReceive: amountToReceive})", err);
+    
+            throw err;
+        });
+    })
+}
+
 exports.modifyBalance = (req, res, next) => {
     console.log("/modifyBalance was called ", req.body);
     let username = req.userData;
@@ -242,7 +272,7 @@ async function addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedA
 
 exports.addConflict = (req, res, next) => {
     console.log("/addConflict was called ", req.body);
-    // 1 = LENDING, 2 = BORROWING, 3 = VENDOR_OWEING
+    // 1 = LENDING/ SETTLING, 2 = BORROWING, 3 = VENDOR_OWEING
     let operation = req.body.operation;
     let srcEntity = req.body.srcEntity;
     let dstEntity = req.body.dstEntity;
@@ -288,6 +318,11 @@ exports.addConflict = (req, res, next) => {
         console.log("modifying balance for " + dstEntity + " by adding " + dstBalanceModifier);
         modifyUserBalance(srcEntity, srcBalanceModifier);
         modifyUserBalance(dstEntity, dstBalanceModifier);
+    } else if (srcType === "user" && dstType === "vendor") {
+        let dstIncreaseAmountToReceive = srcOwedAmount * 1;
+
+        console.log("Modifing vendor dstIncreaseAmountToReceive");
+        modifyVendorAmountToReceive(dstEntity, dstIncreaseAmountToReceive);
     }
 }
 
@@ -331,7 +366,7 @@ exports.getEntityTransaction = (req, res, next) => {
             let displayedAmount = doc.srcOwedAmount;
             let operationType;
 
-            if (doc.srcOwedAmount > 0 || doc.dstEntity === 'vendor') {
+            if (doc.srcOwedAmount > 0 && doc.dstType === 'vendor') {
                 operation = "OWED TO";
                 operationType = 3;
             } else if (doc.srcOwedAmount > 0) {

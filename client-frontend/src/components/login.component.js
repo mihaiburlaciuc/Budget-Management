@@ -29,26 +29,26 @@ export default class Login extends Component {
     console.log("loginReq " + loginReq.username + " " +loginReq.password);
 
     axios.post(this.serverURL, loginReq)
-        .then(response => {
-          console.log("then Respose");
-          console.log("Respose", response.data);
-          console.log("Respose status", response.status);
-          let token = response.data.token;
-          let balance = response.data.balance;
+    .then(response => {
+      console.log("then Respose");
+      console.log("Respose", response.data);
+      console.log("Respose status", response.status);
+      let token = response.data.token;
+      let balance = response.data.balance;
 
-          this.props.history.push(
-            "/main",
-            {
-              username: this.state.username,
-              token: token,
-              balance: balance
-            }
-          );
-        })
-        .catch(err => {
-          console.log("catch Err");
-          console.log(err);
-        });
+      this.props.history.push(
+        "/main",
+        {
+          username: this.state.username,
+          token: token,
+          balance: balance
+        }
+      );
+    })
+    .catch(err => {
+      alert("Login failed");
+      console.log(err);
+    });
   }
 
   onChangeUsername(e) {
@@ -66,7 +66,7 @@ export default class Login extends Component {
   render() {
       return (
           <div>
-            <h1>Budget Management App</h1>
+            <h1>Budget Management</h1>
             
             <div className="form-group"> 
               <label>Username: </label>

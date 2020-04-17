@@ -38,10 +38,13 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
-// TODO: add routes
 const userRoutes = require('./api/routes/users');
 
 app.use('/users', userRoutes);
+
+const vendorRoutes = require('./api/routes/vendors');
+
+app.use('/vendors', vendorRoutes);
 
 // Catch all requests that go past /products or /orders
 app.use((req, res, next) => {

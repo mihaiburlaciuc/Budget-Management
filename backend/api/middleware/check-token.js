@@ -6,6 +6,8 @@ module.exports = (req, res, next) => {
         const jwtKey = "JWT_SECRET_BUGET_APP";
         const decoded = jwt.verify(token, jwtKey);
         req.userData = decoded.username;
+
+        // console.log("req is", req.body);
         console.log("JWT verification userData " + decoded.username);
         next();
     } catch (error) {

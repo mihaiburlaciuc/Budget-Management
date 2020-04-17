@@ -189,7 +189,7 @@ export default class MainComponent extends Component {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Opertation</th>
+                  <th>Operation</th>
                   <th>User</th>
                   <th>Amount</th>
                 </tr>

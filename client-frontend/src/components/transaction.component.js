@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import { InputGroup, Form, Container, Row, Col, Button, Table } from 'react-bootstrap';
+import { InputGroup, Form, Container, Row, Col, Button} from 'react-bootstrap';
 
 export default class TransactionComponent extends Component {
     constructor(props) {
@@ -31,16 +31,27 @@ export default class TransactionComponent extends Component {
 
     handleRadioButtonsChange(ev, type) {
       if (type === "Lent") {
-        this.setState({ lentToChecked: true, borrowFromChecked: false });
+        this.setState({
+          lentToChecked: true,
+          borrowFromChecked: false, 
+          operation: "Lent to"
+        });
       } else {
-        this.setState({ lentToChecked: false, borrowFromChecked: true });
+        this.setState({ 
+          lentToChecked: false, 
+          borrowFromChecked: true, 
+          operation: "Borrow from"
+        });
       }
-      
     }
 
     onClickDone() {
       let serverURL = 'http://localhost:8080/users/addConflict';
       let operation;
+
+      if (this.state.username.length < 4) {
+        alert("username is not valid");
+      }
 
       if (this.state.lentToChecked) {
         // LENT
@@ -118,7 +129,6 @@ export default class TransactionComponent extends Component {
                 
               </Form.Row>
             </Form.Group>
-            <br />
             <Form.Group as={Row}>
               <Col>
                 <Form.Check
@@ -138,9 +148,9 @@ export default class TransactionComponent extends Component {
                 checked={this.state.borrowFromChecked}
                 onChange={event => this.handleRadioButtonsChange(event, "Borrow")}
                 />  
-              </Col>
+              </Col> 
             </Form.Group>
-
+            <br />
             <Button 
                 variant="outline-primary"
                 block

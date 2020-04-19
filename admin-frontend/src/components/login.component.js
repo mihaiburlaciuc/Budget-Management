@@ -53,7 +53,7 @@ export default class Login extends Component {
           <br />
 					<br />
 					<style>{'body { background-color: white; }'}</style>
-					<h1>Budget Management Admin</h1>
+					<h1 >Budget Management Admin</h1>
 					<br />
 					<br />
 					<Form>

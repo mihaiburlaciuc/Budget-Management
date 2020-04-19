@@ -1,21 +1,33 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import { InputGroup, Form, Container, Row, Col, Button, Table } from 'react-bootstrap';
+import { InputGroup, Form, Container, Col, Button, Row } from 'react-bootstrap';
 
 export default class SettleComponent extends Component {
     constructor(props) {
       super(props);
 
 			this.state = {
+        username: props.history.location.state.username,
         token: props.history.location.state.token,
         isVendorChecked: false,
+        isUserCheck: false,
         entityName: '',
         amount: 0
       }
     }
 
-    handleChange(evt) {
-      this.setState({ isVendorChecked: evt.target.checked });
+    handleRadioButtonsChange(ev, type) {
+      if (type === "User") {
+        this.setState({
+          isUserCheck: true,
+          isVendorChecked: false
+        });
+      } else {
+        this.setState({ 
+          isUserCheck: false, 
+          isVendorChecked: true
+        });
+      }
     }
 
     onChangeEntityName(e) {
@@ -41,7 +53,7 @@ export default class SettleComponent extends Component {
         dstType = 'vendor';
       } else {
         // LENTING
-        operation = 3;
+        operation = 1;
         dstType = 'user';
       }
 
@@ -49,7 +61,7 @@ export default class SettleComponent extends Component {
         token: this.state.token,
         operation: operation,
         srcEntity: this.state.username,
-        dstEntity: this.state.targetUsername,
+        dstEntity: this.state.entityName,
         srcOwedAmount: this.state.amount,
         srcType: "user",
         dstType: dstType
@@ -88,14 +100,29 @@ export default class SettleComponent extends Component {
                 <Form.Control type="text" placeholder="target username/vendor"
                 value = { this.state.entityName }
                 onChange ={ e => this.onChangeEntityName(e) } />
-                 />
 							</Col>
 						</Form.Row>
-            <Form.Row>
-             <Form.Check type="checkbox" label="is vendor" checked={this.state.isVendorChecked}
-              onChange={(evt) => { this.handleChange(evt)} }/>
-            </Form.Row>
-            
+            <Form.Group as={Row}>
+              <Col>
+                <Form.Check
+                inline
+                label="username"
+                type="radio"
+                checked={ (!this.state.isVendorChecked) }
+                onChange={event => this.handleRadioButtonsChange(event, "User")}
+                />
+              </Col>
+              
+              <Col>
+                <Form.Check 
+                inline 
+                label=" vendor" 
+                type='radio'
+                checked={ this.state.isVendorChecked }
+                onChange={event => this.handleRadioButtonsChange(event, "Vendor")}
+                />  
+              </Col> 
+            </Form.Group>
             
 						<br />
 						<Form.Row>

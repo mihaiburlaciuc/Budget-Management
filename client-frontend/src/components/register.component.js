@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import { Form, Row, Col, Button} from 'react-bootstrap';
 
 export default class Register extends Component {
   
@@ -82,45 +83,66 @@ export default class Register extends Component {
   render() {
       return (
         <div>
-          <h1>Register</h1>
-          
-          <div className="form-group"> 
-            <label>Username: </label>
-            <input  type="text"
-                required
-                className="form-control"
-                value={ this.state.username }
-                onChange={ this.onChangeUsername }
-                />
-          </div>
-          <div className="form-group"> 
-            <label>Password: </label>
-            <input  type="text"
-                required
-                className="form-control"
-                value={ this.state.password }
-                onChange={ this.onChangePassword }
-                />
-          </div>
-          <div className="form-group"> 
-            <label>Balance: </label>
-            <input  type="text"
-                required
-                className="form-control"
-                value={ this.state.balance }
-                onChange={ this.onChangeBalance }
-                />
-          </div>
-      
-          <button className="btn btn-primary"
-            onClick={() => {
-              console.log("Done was pressed");
-              this.onDone()
-              
-            }}
-          >
-          Done
-          </button>
+          <h2>Create an account</h2>
+          <br />
+          <br />
+          <Form>
+            <Form.Label>Username:</Form.Label>
+						<Row>
+							<Col></Col>
+							<Col>
+                <Form.Control 
+                placeholder="username"
+								value={ this.state.username}
+								onChange ={ (e) => {this.onChangeUsername(e)} }
+								/>
+							</Col>
+							<Col></Col>
+						</Row>
+						<Form.Label>Password:</Form.Label>
+						<Row>
+							<Col></Col>
+							<Col>
+								<Form.Control
+								type="password"
+								placeholder="password"
+								value = { this.state.password }
+								onChange ={ e => this.onChangePassword(e) }
+								/>
+							</Col>
+							<Col></Col>
+						</Row>
+						<Form.Label>Balance:</Form.Label>
+						<Row>
+							<Col></Col>
+							<Col>
+								<Form.Control
+								type="number"
+								placeholder="initial balance"
+								value = { this.state.balance }
+								onChange ={ e => this.onChangeBalance(e) }
+								/>
+							</Col>
+							<Col></Col>
+						</Row>
+          <br/>
+          <Row>
+							<Col></Col>
+							<Col>
+								<Button 
+									variant="primary"
+									block
+									onClick={() => {
+										this.onDone()
+									}}
+								>
+									Done
+								</Button>
+							</Col>
+							<Col></Col>
+						</Row>
+
+          </Form>
         </div>
       );
   }

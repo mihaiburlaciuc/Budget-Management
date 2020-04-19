@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import { Form, Row, Col, Button} from 'react-bootstrap';
 
 export default class Login extends Component {
   constructor(props) {
@@ -19,8 +20,7 @@ export default class Login extends Component {
   onLogin() {
     console.log("username: " + this.state.username);
     console.log("password: " + this.state.password);
-    console.log("loginReqBAAAA");
-
+    
     const loginReq = {
       username: this.state.username,
       password: this.state.password
@@ -36,14 +36,19 @@ export default class Login extends Component {
       let token = response.data.token;
       let balance = response.data.balance;
 
-      this.props.history.push(
-        "/main",
-        {
-          username: this.state.username,
-          token: token,
-          balance: balance
-        }
-      );
+      if (token === undefined) {
+        alert("Login failed");
+      } else {
+        this.props.history.push(
+          "/main",
+          {
+            username: this.state.username,
+            token: token,
+            balance: balance
+          }
+        );
+      }
+      
     })
     .catch(err => {
       alert("Login failed");
@@ -66,41 +71,72 @@ export default class Login extends Component {
   render() {
       return (
           <div>
+            <br />
+					  <br />
             <h1>Budget Management</h1>
-            
-            <div className="form-group"> 
-              <label>Username: </label>
-              <input  type="text"
-                  required
-                  className="form-control"
-                  value={ this.state.username }
-                  onChange={ this.onChangeUsername }
-                  />
-            </div>
-            <div className="form-group"> 
-              <label>password: </label>
-              <input  type="text"
-                  required
-                  className="form-control"
-                  value={ this.state.password }
-                  onChange={ this.onChangePassword }
-                  />
-            </div>
-            <button className="btn btn-primary"
-              onClick={() => {
-                this.onLogin()
-              }}
-            >
-            Login
-            </button>
-            <p/>
-            <button className="btn btn-primary"
-              onClick={() => {
-                this.props.history.push("/register");
-              }}
-            >
-            Register
-            </button>
+            <br />
+					  <br />
+            <Form>
+            <Form.Label>Username:</Form.Label>
+						<Row>
+							<Col></Col>
+							<Col>
+                <Form.Control 
+                placeholder="username"
+								value={ this.state.username}
+								onChange ={ (e) => {this.onChangeUsername(e)} }
+								/>
+							</Col>
+							<Col></Col>
+						</Row>
+            <br />
+						<Form.Label>Password:</Form.Label>
+						<Row>
+							<Col></Col>
+							<Col>
+								<Form.Control
+								type="password"
+								placeholder="password"
+								value = { this.state.password }
+								onChange ={ e => this.onChangePassword(e) }
+								/>
+							</Col>
+							<Col></Col>
+						</Row>
+            <br />
+            <Row>
+							<Col></Col>
+							<Col>
+								<Button 
+									variant="primary"
+									block
+									onClick={() => {
+										this.onLogin()
+									}}
+								>
+									Login
+								</Button>
+							</Col>
+							<Col></Col>
+						</Row>
+            <br />
+					  <br />
+						<Row>
+							<Col></Col>
+							<Col>
+								<Button 
+									variant="secondary"
+									block
+									onClick={() => {
+                    this.props.history.push("/register");
+                  }}
+								>
+								Register
+								</Button>
+							</Col>
+							<Col></Col>
+						</Row>
+            </Form>
           </div>
       );
   }

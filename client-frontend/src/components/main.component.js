@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import { InputGroup, Form, Container, Row, Col, Button, Table } from 'react-bootstrap';
+import { Form, Container, Row, Col, Button, Table } from 'react-bootstrap';
 
 // https://react-bootstrap.github.io/components/buttons/
 export default class MainComponent extends Component {
@@ -131,15 +131,17 @@ export default class MainComponent extends Component {
   render() {
     return (
         <div>
+        <br />
+        <br />
         <h1>Balance: {this.state.balance} RON </h1>
-        <h3>Logged in as {this.state.username} </h3>
+        <h5 style={{ color: 'gray' }}>Logged in as {this.state.username} </h5>
         <div>
         <br />
         <br />
           <Container>
             <Row>
-              <Col lg={4}>
-                <h4>Modify balance: </h4>
+              <Col lg={3}>
+                <h4 >Modify balance: </h4>
               </Col>
               <Col>
                 <Form.Control 
@@ -149,7 +151,7 @@ export default class MainComponent extends Component {
                 placeholder="amount"
                 />
               </Col>
-              <Col>
+              <Col lg={1}>
                 <Button 
                   variant="outline-primary"
                   block
@@ -158,7 +160,7 @@ export default class MainComponent extends Component {
                   }}
                 >+</Button>{' '}
               </Col>
-              <Col>
+              <Col lg={1}>
                 <Button 
                   variant="outline-primary"
                   block
@@ -228,7 +230,7 @@ export default class MainComponent extends Component {
               </Col>
               <Col>
               <Button
-              variant="outline-success"
+              variant="outline-primary"
               block
               onClick={() => {
                 this.props.history.push(

@@ -146,13 +146,19 @@ export default class MainComponent extends Component {
 	render() {
 			return (
 				<div>
-					<h1>Budget Management Admin console</h1>
+          <br />
+					<br />
+					<h1 style={{ color: 'gray' }}>Budget Management Admin console</h1>
+          <br />
+					<br />
 					<Row>
+            <Col lg={2}></Col>
 						<Col>
-							<h4>Add vendor</h4>
+							<h4 style={{ color: 'gray' }}>Add vendor</h4>
 						</Col>
 						<Col>
-								<Form.Control 
+                <Form.Control 
+                variant="dark"
 								type="text"
 								placeholder="Vendor name"
 								value = { this.state.addVendorName }
@@ -170,6 +176,8 @@ export default class MainComponent extends Component {
 							Add
 							</Button>
 						</Col>
+            <Col lg={2}>
+              </Col>
 					</Row>
 					
 					<br />
@@ -194,14 +202,12 @@ export default class MainComponent extends Component {
               }
             </Table>
           </div>  
-					<br />
 					
 					<Jumbotron>
 						<Row>
 							<Col>
-							<h2>New transaction</h2>
+							<h2 style={{ color: 'gray' }}>New transaction</h2>
 							</Col>
-							<Col lg={10}></Col>
 						</Row>
 						<Form.Group>
 							<Form.Control 

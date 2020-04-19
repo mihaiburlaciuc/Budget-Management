@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import { InputGroup, Form, Container, Row, Col, Button, Table } from 'react-bootstrap';
+import { InputGroup, Form, Container, Row, Col, Button, Table, Jumbotron } from 'react-bootstrap';
 
 export default class Login extends Component {
 	constructor(props) {
@@ -50,6 +50,9 @@ export default class Login extends Component {
 	render() {
 		return (
 				<div>
+          <br />
+					<br />
+					<style>{'body { background-color: white; }'}</style>
 					<h1>Budget Management Admin</h1>
 					<br />
 					<br />

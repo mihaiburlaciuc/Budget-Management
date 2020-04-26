@@ -7,10 +7,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json() );
 
 const apiMetrics = require('prometheus-api-metrics');
-app.use(apiMetrics());
+app.use(apiMetrics({metricsPrefix: "BUDGET_APP"}));
+
+const client = require('prom-client');
+const allRequestMetric = new client.Counter({
+  name: 'metric_all_requests',
+  help: 'metric_help',
+});
 
 // Add headers for CORS
 app.use((req, res, next) => {
+    allRequestMetric.inc(); // Inc with 1
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",

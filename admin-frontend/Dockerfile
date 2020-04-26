@@ -11,6 +11,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 RUN npm install --silent
 RUN npm install react-bootstrap --save
+RUN npm install react-iframe --save
 
 COPY . /app
 

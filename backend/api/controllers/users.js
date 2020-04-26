@@ -5,6 +5,12 @@ const User = require("../models/users");
 const Conflict = require("../models/conflict");
 const Vendor = require("../models/vendor");
 
+const client = require('prom-client');
+const userLoginMetric = new client.Counter({
+  name: 'metric_all_user_login',
+  help: 'metric_help',
+});
+
 exports.user_register = (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
@@ -52,7 +58,8 @@ exports.user_login =  (req, res, next) => {
     console.log("/login");
     console.log("Req.body: " + JSON.stringify(req.body));
     console.log("Req body " + username + " " + password);
-
+    userLoginMetric.inc();
+    
     User.find({ username: req.body.username })
     .exec()
     .then(user => {

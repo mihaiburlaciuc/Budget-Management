@@ -1,6 +1,12 @@
 const jwt = require('jsonwebtoken');
- 
+const client = require('prom-client');
+const jwtVerificationMetric = new client.Counter({
+  name: 'metric_all_jwt_requests',
+  help: 'metric_help',
+});
+
 module.exports = (req, res, next) => {
+    jwtVerificationMetric.inc();
     try {
         const token = req.body.token;
         const jwtKey = "JWT_SECRET_BUGET_APP";

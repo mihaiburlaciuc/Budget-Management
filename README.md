@@ -9,8 +9,6 @@ docker-compose up
 ## Run in a swarm
 docker swarm init
 
-
-
 docker node ls
 
 ## Images

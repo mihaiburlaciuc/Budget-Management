@@ -9,6 +9,8 @@ WORKDIR /app
 # where available (npm@5+)
 COPY package*.json ./
 
+RUN npm install --save prom-client
+RUN npm install --save prometheus-api-metrics
 RUN npm install --save express
 RUN npm install --save body-parser
 RUN npm install -g nodemon

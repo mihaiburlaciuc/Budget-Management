@@ -6,6 +6,9 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json() );
 
+const apiMetrics = require('prometheus-api-metrics');
+app.use(apiMetrics());
+
 // Add headers for CORS
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");

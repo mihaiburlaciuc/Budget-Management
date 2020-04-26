@@ -25,7 +25,7 @@ export default class Login extends Component {
       password: this.state.password
     }; 
 
-    console.log("loginReq " +loginReq.password);
+    console.log("NEW LOGIN WORKS2 " +loginReq.password);
 
 		let loginURL = 'http://localhost:8080/users/login';
     axios.post(loginURL, loginReq)

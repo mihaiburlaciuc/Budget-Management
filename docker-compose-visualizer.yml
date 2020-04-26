@@ -7,6 +7,8 @@ services:
         stdin_open: true
         ports:
          - "3000:3000"
+        networks:
+            - webnet
 
     admin-frontend:
         image: mihaiburlaciuc/budget-app-admin-frontend
@@ -15,6 +17,8 @@ services:
         stdin_open: true
         ports:
             - "3001:3000"
+        networks:
+            - webnet
     
     backend:
         image: mihaiburlaciuc/budget-app-node
@@ -24,11 +28,15 @@ services:
          - "8080:8080"
         depends_on: 
          - "mongo"
+        networks:
+            - webnet
          
     mongo: 
         image: "mongo"
         ports:
          - "27018:27017"
+        networks:
+            - webnet
 
     prometheus:
         image: "prom/prometheus"
@@ -36,12 +44,15 @@ services:
          - "9090:9090"
         volumes:
             - ./prometheus:/etc/prometheus/
+        networks:
+            - webnet
         
     grafana:
         image: "grafana/grafana"
         ports: 
          - "3002:3000"
-
+        networks:
+            - webnet
     visualizer:
         image: dockersamples/visualizer:stable
         ports:
@@ -51,5 +62,10 @@ services:
         deploy:
             placement:
                 constraints: [node.role == manager]
+        networks:
+            - webnet
+
+networks:
+    webnet:
 
         

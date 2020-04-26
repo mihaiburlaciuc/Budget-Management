@@ -44,6 +44,10 @@ $ docker-machine ssh myvm2 "docker swarm leave"
 $ docker-machine ssh myvm1 "docker swarm leave --force"
 
 ```
+# ! get the ip of the host from vm:
+netstat -rn ==== get gateway != 0.0.0.0
+curl 10.0.2.2:8080 
+
 # Invalid mounting config error: 
 "invalid mount config for type…" 
 

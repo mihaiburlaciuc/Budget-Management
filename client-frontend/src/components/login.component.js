@@ -18,27 +18,6 @@ export default class Login extends Component {
   }
 
   componentWillMount() {
-    let URL = 'http://backend:8080/';
-    console.log("Verifying connection to url: " + URL);
-
-    axios.get(URL)
-    .then((res) => {
-      console.log('Connection verified with response: ', res);
-    })
-    .catch(err => {
-      console.log("Connection verified with error", err);
-    })
-
-    let URL2 = 'http://192.168.99.100:8080/';
-    console.log("Verifying connection to url2: " + URL2);
-
-    axios.get(URL2)
-    .then((res) => {
-      console.log('Connection verified with response2: ', res);
-    })
-    .catch(err => {
-      console.log("Connection verified with error2", err);
-    })
 
     let URL3 = 'http://localhost:8080/';
     console.log("Verifying connection to url3: " + URL3);

@@ -197,7 +197,8 @@ export default class MainComponent extends Component {
                 </tr>
               </thead>
               {
-              this.state.transactions.map( (tranaction, index,) => (
+              this.state.transactions.filter(t => t.amount != 0)
+              .map( (tranaction, index,) => (
                   <tr>
                     <td>{index}</td>
                     <td>{tranaction.operation}</td>

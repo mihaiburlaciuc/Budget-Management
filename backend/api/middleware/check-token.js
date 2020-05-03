@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const client = require('prom-client');
 const jwtVerificationMetric = new client.Counter({
-  name: 'metric_all_jwt_requests',
+  name: 'nodeMetric_all_jwt_requests',
   help: 'metric_help',
 });
 

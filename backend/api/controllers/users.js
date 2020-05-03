@@ -6,15 +6,26 @@ const Conflict = require("../models/conflict");
 const Vendor = require("../models/vendor");
 
 const client = require('prom-client');
+const userRegisterMetric = new client.Counter({
+    name: 'nodeMetric_all_user_register',
+    help: 'metric_help',
+});
+
 const userLoginMetric = new client.Counter({
-  name: 'metric_all_user_login',
+  name: 'nodeMetric_all_user_login',
   help: 'metric_help',
 });
+
+const conflictMetric = new client.Counter({
+    name: 'nodeMetric_all_conflicts',
+    help: 'metric_help',
+  });
 
 exports.user_register = (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
     let balance = req.body.balance;
+    userRegisterMetric.inc();
 
     console.log("Req.body: " + JSON.stringify(req.body));
     console.log("Req body " + username + " " + password + " " + balance);
@@ -278,6 +289,7 @@ async function addTwinConflicts(srcEntity, dstEntity, srcType, dstType, srcOwedA
 }
 
 exports.addConflict = (req, res, next) => {
+    conflictMetric.inc();
     console.log("/addConflict was called ", req.body);
     // 1 = LENDING, 2 = BORROWING, 3 = VENDOR_OWEING, 4 = VENDOR_SETTLING
     let operation = req.body.operation;

@@ -11,7 +11,7 @@ app.use(apiMetrics({metricsPrefix: "BUDGET_APP"}));
 
 const client = require('prom-client');
 const allRequestMetric = new client.Counter({
-  name: 'metric_all_requests',
+  name: 'nodeMetric_all_requests',
   help: 'metric_help',
 });
 

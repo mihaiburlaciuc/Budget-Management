@@ -194,7 +194,7 @@ export default class MainComponent extends Component {
               {
 								this.state.vendors.map( (vendor, index,) => (
 										<tr>
-											<td>{index}</td>
+											<td>{index + 1}</td>
 											<td>{vendor.name}</td>
 											<td>{vendor.amountToReceive}</td>
 										</tr>

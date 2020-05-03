@@ -3,10 +3,15 @@ const jwt = require('jsonwebtoken');
 
 const Vendor = require("../models/vendor");
 
-exports.addVendor = (req, res, next) => {
-    
+const client = require('prom-client');
+const vendorsMetric = new client.Counter({
+    name: 'nodeMetric_all_vendors',
+    help: 'metric_help',
+});
 
+exports.addVendor = (req, res, next) => {
     let vendorName = req.body.vendorName;
+    vendorsMetric.inc();
     
     console.log("addVendor", vendorName.body);
 
